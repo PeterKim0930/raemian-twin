@@ -7,12 +7,11 @@ function fit(){if(!data)return;const [w,h]=size(),[x0,x1,y0,y1]=data.bounds;stat
 function point(x,y){const b=data.bounds,v=state.viewport;return [v.x+(x-(b[0]+b[1])/2)*v.scale,v.y-(y-(b[2]+b[3])/2)*v.scale];}
 function polygon(points,fill,stroke){ctx.beginPath();points.forEach((p,i)=>{const [x,y]=point(...p);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=.7;ctx.stroke();}}
 function showPhoto(){
- const camera=focusedCamera(data,state),path=photoPath(data,state);
+ const camera=focusedCamera(data,state),path=photoPath(data,state),scenarioLabel=data.scenarios.find(s=>s.id===state.scenario).label;
  $('photo-title').textContent=camera?camera.id:'카메라를 선택하세요';
- $('photo-scenario').textContent=camera?data.scenarios.find(s=>s.id===state.scenario).label:'';
  $('camera-height').textContent=camera?(camera.placementHeightM===undefined?`촬영점 높이 ${camera.position[2].toFixed(2)} m`:`설치 높이 ${camera.placementHeightM.toFixed(2)} m`):'';
  $('camera-location').textContent=camera?`X ${camera.position[0].toFixed(2)} m · Y ${camera.position[1].toFixed(2)} m`:'';
- if(path){if($('photo').getAttribute('src')!==path)$('photo').setAttribute('src',path);$('photo').alt=`${camera.id} · ${$('photo-scenario').textContent}`;$('photo-link').setAttribute('href',path);}else{$('photo').removeAttribute('src');$('photo').alt='';$('photo-link').removeAttribute('href');}
+ if(path){if($('photo').getAttribute('src')!==path)$('photo').setAttribute('src',path);$('photo').alt=`${camera.id} · ${scenarioLabel}`;$('photo-link').setAttribute('href',path);}else{$('photo').removeAttribute('src');$('photo').alt='';$('photo-link').removeAttribute('href');}
  $('photo').hidden=!path;$('photo-link').hidden=!path;
 }
 function rebuild(){
