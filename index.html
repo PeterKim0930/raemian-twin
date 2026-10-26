@@ -13,5 +13,14 @@
 </aside>
 <section class="map"><div class="toolbar"><span id="status" role="status">시야 데이터를 불러오는 중…</span><button id="fit">전체 보기</button></div><canvas id="plan" aria-label="CCTV 가시 영역 평면도"></canvas><ul class="coverage-legend" aria-label="가시 영역 색상"><li><span class="swatch single"></span>카메라 1대만</li><li><span class="swatch overlap"></span>2대 이상 겹침</li><li><span class="swatch selected"></span>선택한 카메라</li></ul><p id="map-help" class="help">휠: 확대·축소 · 드래그: 이동 · 같은 카메라를 다시 누르면 선택 해제</p></section>
 <section class="photo-panel"><h2 id="photo-title">카메라를 선택하세요</h2><p id="camera-height"></p><p id="camera-location"></p><a id="photo-link" target="_blank" rel="noopener" hidden><img id="photo" alt="" hidden></a><p class="note">사진은 고정된 카메라 시점과 차량 배치를 보여 줍니다.</p></section>
-</main><script type="module" src="viewer.mjs"></script>
+</main>
+<section id="coverage" class="coverage-summary" aria-labelledby="coverage-title" hidden>
+<h2 id="coverage-title">현재 조건의 커버율</h2><p id="coverage-context"></p>
+<dl class="coverage-stats">
+<div><dt>전체 커버 · 1대 이상</dt><dd id="coverage-total">—</dd></div>
+<div class="single"><dt>1대만 보는 영역</dt><dd id="coverage-single">—</dd></div>
+<div class="overlap"><dt>2대 이상 보는 영역</dt><dd id="coverage-overlap">—</dd></div>
+<div class="selected"><dt id="coverage-selected-label">선택한 카메라</dt><dd id="coverage-selected">카메라를 선택하세요</dd></div>
+</dl><p id="coverage-basis" class="note"></p>
+</section><script type="module" src="viewer.mjs"></script>
 </body></html>
