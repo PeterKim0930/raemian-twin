@@ -8,7 +8,7 @@ export function activeLayout(data,state){return data.layouts.find(layout=>layout
 export function focusCamera(state,cameraId){return changeSelection(state,{focus:state.focus===cameraId?null:cameraId});}
 export function switchLayout(state,layout){return changeSelection(state,{layout,focus:null});}
 export function focusedCamera(data,state){return activeLayout(data,state).cameras.find(c=>c.id===state.focus);}
-export function photoPath(data,state){return focusedCamera(data,state)?.images[state.scenario]??null;}
+export function photoPath(data,state){return focusedCamera(data,state)?.images?.[state.scenario]??null;}
 export function visibilityLayers(masks,focusIndex,size){return {union:unionMasks(masks,masks.map((_,i)=>i),size),focus:focusIndex<0?new Uint8Array(size):masks[focusIndex]};}
 export function pixelColor(staticCell,occupiedCell,visible,focused,ground){return staticCell?[57,69,78]:occupiedCell?[148,155,161]:focused?[31,125,190]:visible?[147,199,232]:ground?[250,251,252]:[235,239,242];}
 export function hitCamera(labels,x,y){const label=labels.find(l=>x>=l.box.x&&x<=l.box.x+l.box.w&&y>=l.box.y&&y<=l.box.y+l.box.h);if(label)return label.id;const markers=labels.filter(l=>Math.hypot(l.x-x,l.y-y)<=8).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y));return markers[0]?.id??null;}
