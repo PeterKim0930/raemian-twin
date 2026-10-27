@@ -9,18 +9,18 @@ export function switchLayout(state,layout){return changeSelection(state,{layout,
 export function focusedCamera(data,state){return activeLayout(data,state).cameras.find(c=>c.id===state.focus);}
 export function photoPath(data,state){return focusedCamera(data,state)?.images?.[state.scenario]??null;}
 export function visibilityLayers(masks,focusIndex,size){const counts=new Uint8Array(size);for(const mask of masks)for(let i=0;i<size;i++)counts[i]+=mask[i];return {counts,focus:focusIndex<0?new Uint8Array(size):masks[focusIndex]};}
-export function coverageSummary(layers,ground,staticMask,occupied,step,hasFocus){
+export function coverageSummary(layers,region,staticMask,occupied,hasFocus){
  let freeCells=0,singleCells=0,overlapCells=0,selectedCells=0;
- for(let i=0;i<ground.length;i++){
-  if(!ground[i]||staticMask[i]||occupied[i])continue;
+ for(let i=0;i<region.length;i++){
+  if(!region[i]||staticMask[i]||occupied[i])continue;
   freeCells++;
   if(layers.counts[i]===1)singleCells++;else if(layers.counts[i]>=2)overlapCells++;
   if(hasFocus&&layers.focus[i])selectedCells++;
  }
- const cellArea=step*step,metric=cells=>({cells,areaM2:cells*cellArea,percent:cells/freeCells*100});
+ const metric=cells=>({cells,percent:cells/freeCells*100});
  return {free:metric(freeCells),total:metric(singleCells+overlapCells),single:metric(singleCells),overlap:metric(overlapCells),selected:hasFocus?metric(selectedCells):null};
 }
-export function pixelColor(staticCell,occupiedCell,count,focused,ground){return staticCell?[57,69,78]:occupiedCell?[148,155,161]:focused?[243,166,74]:count>=2?[88,169,180]:count===1?[200,224,239]:ground?[250,251,252]:[235,239,242];}
+export function pixelColor(staticCell,occupiedCell,count,focused,ground,inRegion,showSingle,showOverlap){if(!inRegion)return staticCell?[93,103,111]:[177,185,191];return staticCell?[57,69,78]:occupiedCell?[148,155,161]:focused?[243,166,74]:count>=2&&showOverlap?[88,169,180]:count===1&&showSingle?[200,224,239]:ground?[250,251,252]:[235,239,242];}
 export function hitCamera(labels,x,y){const label=labels.find(l=>x>=l.box.x&&x<=l.box.x+l.box.w&&y>=l.box.y&&y<=l.box.y+l.box.h);if(label)return label.id;const markers=labels.filter(l=>Math.hypot(l.x-x,l.y-y)<=8).sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y));return markers[0]?.id??null;}
 export function placeCameraLabels(items,width,height){
  const placed=[];

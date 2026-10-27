@@ -21,3 +21,5 @@
  .coverage-summary{margin:0 10px 8px;padding:8px 10px;min-width:0}.coverage-heading{display:flex;align-items:baseline;gap:12px;height:20px;min-width:0;margin-bottom:6px}.coverage-summary h2{font-size:16px;line-height:20px;white-space:nowrap;margin:0}#coverage-context{font-size:11px;line-height:20px;white-space:nowrap;margin:0;min-width:0}
  .coverage-stats{gap:8px;margin:0 0 6px}.coverage-stats>div{padding:5px 8px;border-top-width:3px}.coverage-stats dt{font-size:11px;line-height:15px;white-space:nowrap;margin-bottom:3px}.coverage-stats dd{font-size:clamp(12px,1.2vw,16px);line-height:20px;white-space:nowrap;overflow-wrap:normal}#coverage-basis{font-size:11px;line-height:15px;white-space:nowrap}
 }
+
+.coverage-legend label{font-size:inherit;gap:5px;cursor:pointer}.coverage-legend input{margin:0;accent-color:#126a8b}
