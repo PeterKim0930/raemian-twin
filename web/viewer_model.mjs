@@ -4,7 +4,12 @@ export function changeSelection(state,patch){return {...state,...patch,viewport:
 export function maskIndex(data,state){return [data.scenarios.findIndex(s=>s.id===state.scenario),data.heightBands.findIndex(b=>b.id===state.band),data.visibilityModes.findIndex(m=>m.id===state.mode)];}
 
 export function activeLayout(data,state){return data.layouts.find(layout=>layout.id===state.layout);}
-export function focusCamera(state,cameraId){return changeSelection(state,{focus:state.focus===cameraId?null:cameraId});}
+export function focusCamera(state,cameraId){return changeSelection(state,{focus:state.focus===cameraId?null:cameraId,vehicle:null});}
+export function focusVehicle(state,vehicleId){return changeSelection(state,{vehicle:state.vehicle===vehicleId?null:vehicleId,focus:null});}
+export function clearSelection(state){return changeSelection(state,{focus:null,vehicle:null});}
+export function activeVehicles(data,state){return state.scenario==='empty'?[]:data.vehicles.filter(vehicle=>state.scenario==='double'||vehicle.kind==='normal');}
+export function switchScenario(data,state,scenario){const next=changeSelection(state,{scenario});return activeVehicles(data,next).some(vehicle=>vehicle.id===next.vehicle)?next:changeSelection(next,{vehicle:null});}
+export function vehicleObservations(data,state){if(!state.vehicle)return [];const records=data.vehicleObservations.layouts[state.layout][state.scenario];return activeLayout(data,state).cameras.flatMap(camera=>{const row=records[camera.id],box=row.boxes[state.vehicle];return box?[{camera,path:camera.images[state.scenario],width:row.width,height:row.height,box}]:[];});}
 export function switchLayout(state,layout){return changeSelection(state,{layout,focus:null});}
 export function focusedCamera(data,state){return activeLayout(data,state).cameras.find(c=>c.id===state.focus);}
 export function photoPath(data,state){return focusedCamera(data,state)?.images?.[state.scenario]??null;}
@@ -33,3 +38,17 @@ export function placeCameraLabels(items,width,height){
  }
  return placed;
 }
+
+export function worldPoint(data,state,x,y){const b=data.bounds,v=state.viewport;return [(x-v.x)/v.scale+(b[0]+b[1])/2,(v.y-y)/v.scale+(b[2]+b[3])/2];}
+export function pointInPolygon(points,x,y){
+ let inside=false;
+ for(let i=0,j=points.length-1;i<points.length;j=i++){
+  const [ax,ay]=points[j],[bx,by]=points[i],dx=bx-ax,dy=by-ay;
+  const epsilon=Number.EPSILON*Math.max(1,Math.abs(x),Math.abs(y),Math.abs(ax),Math.abs(ay),Math.abs(bx),Math.abs(by))*8;
+  if(Math.abs((x-ax)*dy-(y-ay)*dx)<=epsilon*(Math.abs(dx)+Math.abs(dy))&&x>=Math.min(ax,bx)-epsilon&&x<=Math.max(ax,bx)+epsilon&&y>=Math.min(ay,by)-epsilon&&y<=Math.max(ay,by)+epsilon)return true;
+  if((ay>y)!==(by>y)&&x<(bx-ax)*(y-ay)/(by-ay)+ax)inside=!inside;
+ }
+ return inside;
+}
+export function hitVehicle(data,state,x,y){return activeVehicles(data,state).find(vehicle=>pointInPolygon(vehicle.footprint,x,y))?.id??null;}
+export function hitMapTarget(data,state,labels,x,y){const camera=hitCamera(labels,x,y);if(camera)return {type:'camera',id:camera};const vehicle=hitVehicle(data,state,...worldPoint(data,state,x,y));return vehicle?{type:'vehicle',id:vehicle}:null;}

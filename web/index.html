@@ -2,7 +2,7 @@
 <html lang="ko">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>레미안 CCTV 배치·시야 비교</title><link rel="stylesheet" href="viewer.css"></head>
 <body>
-<header><h1>레미안 CCTV 배치·시야 비교</h1><p>현재 11대와 재배치안 14대 · 입출차존마다 2대 유지 · 2026-10-26 분석</p><p>대상 높이와 가시 기준을 바꾸어 비교하세요. 카메라를 선택하면 해당 시야와 카메라 시점 이미지를 볼 수 있습니다.</p></header>
+<header><h1>레미안 CCTV 배치·시야 비교</h1><p>현재 11대와 재배치안 14대 · 입출차존마다 2대 유지 · 2026-10-26 분석</p><p>대상 높이와 가시 기준을 바꾸어 비교하세요. 카메라를 선택하면 해당 시야와 사진을, 지도에서 차량을 선택하면 그 차량이 보이는 모든 카메라 사진을 볼 수 있습니다.</p></header>
 <main>
 <aside>
 <fieldset><legend>카메라 배치</legend><select id="layout" aria-label="카메라 배치"></select><p id="layout-description" class="note"></p></fieldset>
@@ -11,8 +11,8 @@
 <fieldset><legend>차량 배치</legend><select id="scenario" aria-label="차량 배치"><option value="empty">비어 있음</option><option value="full">꽉 참 · 29대</option><option value="double">이면주차 포함 · 35대</option></select></fieldset>
 <fieldset class="camera-controls"><legend>카메라 <span id="count"></span></legend><div class="buttons"><button id="clear">선택 해제</button></div><div id="cameras"></div></fieldset><p id="vehicles"></p>
 </aside>
-<section class="map"><div class="toolbar"><span id="status" role="status">시야 데이터를 불러오는 중…</span><button id="fit">전체 보기</button></div><canvas id="plan" aria-label="CCTV 가시 영역 평면도"></canvas><ul class="coverage-legend" aria-label="가시 영역 색상"><li><label><input id="show-single" type="checkbox" checked><span class="swatch single"></span>카메라 1대만</label></li><li><label><input id="show-overlap" type="checkbox" checked><span class="swatch overlap"></span>2대 이상 겹침</label></li><li><span class="swatch selected"></span>선택한 카메라</li></ul><p id="map-help" class="help">휠: 확대·축소 · 드래그: 이동 · 같은 카메라를 다시 누르면 선택 해제</p></section>
-<section class="photo-panel"><h2 id="photo-title">카메라를 선택하세요</h2><p id="camera-height"></p><p id="camera-location"></p><a id="photo-link" target="_blank" rel="noopener" hidden><img id="photo" alt="" hidden></a><p class="note">사진은 고정된 카메라 시점과 차량 배치를 보여 줍니다.</p></section>
+<section class="map"><div class="toolbar"><span id="status" role="status">시야 데이터를 불러오는 중…</span><button id="fit">전체 보기</button></div><canvas id="plan" aria-label="CCTV 가시 영역 평면도"></canvas><ul class="coverage-legend" aria-label="가시 영역 색상"><li><label><input id="show-single" type="checkbox" checked><span class="swatch single"></span>카메라 1대만</label></li><li><label><input id="show-overlap" type="checkbox" checked><span class="swatch overlap"></span>2대 이상 겹침</label></li><li><span class="swatch selected"></span>선택한 카메라</li></ul><p id="map-help" class="help">휠: 확대·축소 · 드래그: 이동 · 카메라·차량 클릭: 선택 · 다시 클릭: 선택 해제</p></section>
+<section id="photo-panel" class="photo-panel"><h2 id="photo-title">카메라나 차량을 선택하세요</h2><p id="camera-height"></p><p id="camera-location"></p><a id="photo-link" target="_blank" rel="noopener" hidden><img id="photo" alt="" hidden></a><div id="vehicle-gallery" class="vehicle-gallery" hidden></div><p id="photo-empty" hidden></p><p id="photo-note" class="note">사진은 고정된 카메라 시점과 차량 배치를 보여 줍니다.</p></section>
 </main>
 <section id="coverage" class="coverage-summary" aria-labelledby="coverage-title" hidden>
 <div class="coverage-heading"><h2 id="coverage-title">현재 조건의 커버율</h2><p id="coverage-context"></p></div>
@@ -22,5 +22,5 @@
 <div class="overlap"><dt>2대 이상 보는 영역</dt><dd id="coverage-overlap">—</dd></div>
 <div class="selected"><dt id="coverage-selected-label">선택한 카메라</dt><dd id="coverage-selected">카메라를 선택하세요</dd></div>
 </dl><p id="coverage-basis" class="note"></p>
-</section><script type="module" src="viewer.mjs"></script>
+</section><dialog id="vehicle-dialog" aria-labelledby="vehicle-dialog-title"><div class="vehicle-dialog-heading"><h2 id="vehicle-dialog-title"></h2><button id="vehicle-dialog-close" type="button">닫기</button></div><div id="vehicle-dialog-photo" class="vehicle-dialog-photo"></div><p class="note">시뮬레이션에서 보이는 차량 부분을 표시합니다.</p></dialog><script type="module" src="viewer.mjs"></script>
 </body></html>
